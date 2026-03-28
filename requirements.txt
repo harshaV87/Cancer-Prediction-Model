@@ -1,0 +1,28 @@
+# Core ML
+torch>=2.1.0
+torchvision>=0.16.0
+
+# Medical Imaging
+nibabel>=5.2.0
+SimpleITK>=2.3.0
+
+# Data Science
+numpy>=1.24.0
+pandas>=2.0.0
+scikit-learn>=1.3.0
+scipy>=1.11.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.13.0
+
+# CoreML Conversion
+coremltools>=7.0
+
+# Training Utilities
+tensorboard>=2.15.0
+tqdm>=4.66.0
+
+# Image Processing
+Pillow>=10.0.0
+opencv-python>=4.8.0

@@ -1,0 +1,52 @@
+# Data (large files)
+data/
+*.nii
+*.nii.gz
+
+# Model checkpoints
+checkpoints/
+*.pth
+*.pt
+*.mlpackage
+*.mlmodel
+
+# Results (regenerable)
+results/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Virtual environments
+venv/
+env/
+.env/
+.conda/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+Thumbs.db
+
+# TensorBoard
+runs/
+
+# iOS build artifacts
+ios/CancerPredictor/build/
+ios/CancerPredictor/*.xcuserdata
+ios/CancerPredictor/DerivedData/
