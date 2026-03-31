@@ -78,9 +78,6 @@ def convert_to_coreml(
                 color_layout=ct.colorlayout.RGB,
             )
         ],
-        classifier_config=ct.ClassifierConfig(
-            class_labels=["No Tumor", "Tumor Detected"],
-        ),
         convert_to="mlprogram",
         minimum_deployment_target=deployment_target,
         compute_precision=compute_precision,
@@ -97,7 +94,12 @@ def convert_to_coreml(
 
     # Add input/output descriptions
     mlmodel.input_description["image"] = "Brain MRI axial slice (224x224 RGB)"
-    mlmodel.output_description["classLabel"] = "Predicted class: 'Tumor Detected' or 'No Tumor'"
+    if "var_840" in mlmodel.output_description:
+        mlmodel.output_description["var_840"] = "Tumor probability (0.0-1.0, after sigmoid). >0.5 = Tumor"
+    elif len(mlmodel.output_description) > 0:
+        # Set description for the first output
+        first_output = list(mlmodel.output_description.keys())[0]
+        mlmodel.output_description[first_output] = "Tumor probability (0.0-1.0, after sigmoid). >0.5 = Tumor"
 
     # Save
     output_path = Path(output_dir)
