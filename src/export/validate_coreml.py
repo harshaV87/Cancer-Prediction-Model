@@ -15,6 +15,7 @@ from pathlib import Path
 import numpy as np
 import torch
 from PIL import Image
+from scipy.special import expit
 from tqdm import tqdm
 
 from src.data.dataset import BraTSSliceDataset
@@ -87,12 +88,21 @@ def validate_coreml(
         coreml_output = coreml_model.predict({"image": pil_image})
 
         # Extract probability from CoreML output
-        # ClassifierConfig produces 'classLabel' and class probabilities
-        if "Tumor Detected" in coreml_output.get("classLabel_probs", {}):
-            cm_prob = coreml_output["classLabel_probs"]["Tumor Detected"]
-        else:
-            # Fallback: check raw output
-            cm_prob = 0.5
+        # Gets raw logit output, apply sigmoid like PyTorch does
+        # CoreML outputs will include the raw model output (typically named var_* or output_*)
+        cm_prob = 0.5
+        for key, value in coreml_output.items():
+            if isinstance(value, (float, np.floating)):
+                # Found a numeric output, apply sigmoid
+                cm_prob = float(expit(value))
+                break
+            elif isinstance(value, (np.ndarray, list)):
+                # If it's an array, try to extract scalar
+                if hasattr(value, 'item'):
+                    cm_prob = float(expit(value.item()))
+                else:
+                    cm_prob = float(expit(value[0] if isinstance(value, (list, np.ndarray)) else value))
+                break
         coreml_preds.append(cm_prob)
 
         diff = abs(pt_prob - cm_prob)
